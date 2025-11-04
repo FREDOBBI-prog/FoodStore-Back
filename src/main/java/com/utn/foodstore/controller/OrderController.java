@@ -28,7 +28,7 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> orders = orderService.findAll();
-        // Convertir el campo items de JSON string a lista de objetos
+        // parseo los items de json a objetos para el front
         orders.forEach(this::parseOrderItems);
         return ResponseEntity.ok(orders);
     }
@@ -75,13 +75,13 @@ public class OrderController {
                 order.setNotes(orderData.get("notes").toString());
             }
             
-            // Convertir los items a JSON string
+            // convierto los items a json string para guardar en bd
             String itemsJson = objectMapper.writeValueAsString(orderData.get("items"));
             order.setItems(itemsJson);
             
-            Order savedOrder = orderService.save(order);
-            parseOrderItems(savedOrder);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
+            Order saved = orderService.save(order);
+            parseOrderItems(saved);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -109,9 +109,9 @@ public class OrderController {
                 order.setNotes(orderData.get("notes").toString());
             }
             
-            Order updatedOrder = orderService.update(id, order);
-            parseOrderItems(updatedOrder);
-            return ResponseEntity.ok(updatedOrder);
+            Order updated = orderService.update(id, order);
+            parseOrderItems(updated);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -121,9 +121,9 @@ public class OrderController {
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> statusData) {
         try {
             String status = statusData.get("status");
-            Order updatedOrder = orderService.updateStatus(id, status);
-            parseOrderItems(updatedOrder);
-            return ResponseEntity.ok(updatedOrder);
+            Order updated = orderService.updateStatus(id, status);
+            parseOrderItems(updated);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -139,16 +139,16 @@ public class OrderController {
         }
     }
 
-    // Método auxiliar para parsear los items de JSON a objetos
+    // helper para parsear items de json a lista de objetos
     private void parseOrderItems(Order order) {
         try {
             List<OrderItem> items = objectMapper.readValue(
                 order.getItems(), 
                 objectMapper.getTypeFactory().constructCollectionType(List.class, OrderItem.class)
             );
-            // Aquí podrías agregar los items parseados a un campo transient si lo necesitas
+            // si queres podes agregar los items a un campo transient
         } catch (JsonProcessingException e) {
-            // Si falla el parseo, dejamos el campo items como está (JSON string)
+            // si falla el parseo, dejo el campo items como json string
         }
     }
 

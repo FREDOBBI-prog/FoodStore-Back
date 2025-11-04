@@ -38,8 +38,8 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<?> createCategory(@Valid @RequestBody Category category) {
         try {
-            Category savedCategory = categoryService.save(category);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
+            Category saved = categoryService.save(category);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -48,8 +48,8 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @Valid @RequestBody Category category) {
         try {
-            Category updatedCategory = categoryService.update(id, category);
-            return ResponseEntity.ok(updatedCategory);
+            Category updated = categoryService.update(id, category);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

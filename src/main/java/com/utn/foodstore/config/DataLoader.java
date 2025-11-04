@@ -25,7 +25,7 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         
-        // Crear usuarios de prueba
+        // creo usuarios de prueba
         User admin = new User();
         admin.setName("Administrador");
         admin.setEmail("admin@food.com");
@@ -47,7 +47,7 @@ public class DataLoader implements CommandLineRunner {
         adrian.setRole("admin");
         userRepository.save(adrian);
 
-        // Crear categorías de prueba
+        // creo categorias de prueba
         Category pizzas = new Category();
         pizzas.setName("Pizzas");
         pizzas.setDescription("Deliciosas pizzas artesanales");
@@ -76,7 +76,7 @@ public class DataLoader implements CommandLineRunner {
         postres.setActive(true);
         categoryRepository.save(postres);
 
-        // Crear productos de prueba
+        // creo productos de prueba
         Product pizza1 = new Product();
         pizza1.setName("Pizza Margarita");
         pizza1.setDescription("Pizza clásica con tomate, mozzarella y albahaca fresca");

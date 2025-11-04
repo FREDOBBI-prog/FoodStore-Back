@@ -48,7 +48,7 @@ public class Product {
     @Column(nullable = false)
     private Long categoryId;
 
-    @Transient // No se guarda en la base de datos, se calcula dinámicamente
+    @Transient // no se persiste, solo lo uso para mostrar en el front
     private String categoryName;
 
 }

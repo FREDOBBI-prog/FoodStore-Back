@@ -21,8 +21,10 @@ public class ProductService {
 
     public List<Product> findAll() {
         List<Product> products = productRepository.findAll();
-        // Agregar el nombre de la categoría a cada producto
-        products.forEach(this::setCategoryName);
+        // le agrego el nombre de la categoria a cada producto
+        for (Product p : products) {
+            setCategoryName(p);
+        }
         return products;
     }
 
@@ -48,9 +50,9 @@ public class ProductService {
         if (!categoryRepository.existsById(product.getCategoryId())) {
             throw new RuntimeException("La categoría no existe");
         }
-        Product savedProduct = productRepository.save(product);
-        setCategoryName(savedProduct);
-        return savedProduct;
+        Product saved = productRepository.save(product);
+        setCategoryName(saved);
+        return saved;
     }
 
     public Product update(Long id, Product product) {
@@ -61,9 +63,9 @@ public class ProductService {
             throw new RuntimeException("La categoría no existe");
         }
         product.setId(id);
-        Product updatedProduct = productRepository.save(product);
-        setCategoryName(updatedProduct);
-        return updatedProduct;
+        Product updated = productRepository.save(product);
+        setCategoryName(updated);
+        return updated;
     }
 
     public void delete(Long id) {
@@ -73,10 +75,12 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    // Método auxiliar para agregar el nombre de la categoría al producto
+    // metodo helper para poner el nombre de la categoria al producto
     private void setCategoryName(Product product) {
         Optional<Category> category = categoryRepository.findById(product.getCategoryId());
-        category.ifPresent(cat -> product.setCategoryName(cat.getName()));
+        if (category.isPresent()) {
+            product.setCategoryName(category.get().getName());
+        }
     }
 
 }

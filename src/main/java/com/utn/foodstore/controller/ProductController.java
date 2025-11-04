@@ -43,8 +43,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<?> createProduct(@Valid @RequestBody Product product) {
         try {
-            Product savedProduct = productService.save(product);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+            Product saved = productService.save(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -53,8 +53,8 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
         try {
-            Product updatedProduct = productService.update(id, product);
-            return ResponseEntity.ok(updatedProduct);
+            Product updated = productService.update(id, product);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

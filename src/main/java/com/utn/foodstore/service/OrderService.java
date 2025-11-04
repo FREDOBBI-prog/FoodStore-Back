@@ -63,7 +63,7 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    // Método auxiliar para convertir items JSON a lista de objetos
+    // helper para convertir json string a lista de items
     public List<OrderItem> parseItems(String itemsJson) {
         try {
             return objectMapper.readValue(itemsJson, new TypeReference<List<OrderItem>>() {});
@@ -72,7 +72,7 @@ public class OrderService {
         }
     }
 
-    // Método auxiliar para convertir lista de items a JSON
+    // helper para convertir lista de items a json string
     public String stringifyItems(List<OrderItem> items) {
         try {
             return objectMapper.writeValueAsString(items);
