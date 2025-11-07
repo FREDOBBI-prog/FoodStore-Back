@@ -83,5 +83,23 @@ public class ProductService {
         }
     }
 
+    // metodo para descontar stock de un producto
+    public void decreaseStock(Long productId, Integer quantity) {
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (productOpt.isEmpty()) {
+            throw new RuntimeException("Producto no encontrado");
+        }
+        Product product = productOpt.get();
+        if (product.getStock() < quantity) {
+            throw new RuntimeException("Stock insuficiente para el producto: " + product.getName());
+        }
+        product.setStock(product.getStock() - quantity);
+        // si el stock llega a 0, marco como no disponible
+        if (product.getStock() == 0) {
+            product.setAvailable(false);
+        }
+        productRepository.save(product);
+    }
+
 }
 

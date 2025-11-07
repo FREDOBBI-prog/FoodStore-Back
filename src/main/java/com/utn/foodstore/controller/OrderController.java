@@ -141,14 +141,20 @@ public class OrderController {
 
     // helper para parsear items de json a lista de objetos
     private void parseOrderItems(Order order) {
+        if (order == null || order.getItems() == null || order.getItems().isEmpty()) {
+            order.setItemsList(new java.util.ArrayList<>());
+            return;
+        }
         try {
             List<OrderItem> items = objectMapper.readValue(
                 order.getItems(), 
                 objectMapper.getTypeFactory().constructCollectionType(List.class, OrderItem.class)
             );
-            // si queres podes agregar los items a un campo transient
+            // asigno la lista parseada al campo transient para que se devuelva en el json
+            order.setItemsList(items != null ? items : new java.util.ArrayList<>());
         } catch (JsonProcessingException e) {
-            // si falla el parseo, dejo el campo items como json string
+            // si falla el parseo, dejo itemsList como lista vacía
+            order.setItemsList(new java.util.ArrayList<>());
         }
     }
 

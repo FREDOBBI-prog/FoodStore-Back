@@ -8,6 +8,7 @@ import com.utn.foodstore.model.OrderItem;
 import com.utn.foodstore.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,9 @@ public class OrderService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ProductService productService;
 
     public List<Order> findAll() {
         return orderRepository.findAllByOrderByCreatedAtDesc();
@@ -37,7 +41,17 @@ public class OrderService {
         return orderRepository.findByStatus(status);
     }
 
+    @Transactional
     public Order save(Order order) {
+        // parseo los items del pedido
+        List<OrderItem> items = parseItems(order.getItems());
+        
+        // descuento el stock de cada producto
+        for (OrderItem item : items) {
+            productService.decreaseStock(item.getProductId(), item.getQty());
+        }
+        
+        // guardo el pedido
         return orderRepository.save(order);
     }
 

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -20,6 +22,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@lombok.ToString(exclude = "items")
 public class Order {
 
     @Id
@@ -45,7 +48,12 @@ public class Order {
     private String status; // "pending", "processing", "completed", "cancelled"
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String items; // JSON string de los items
+    @JsonIgnore
+    private String items; // JSON string de los items (solo para BD)
+
+    @Transient // no se persiste, solo para el frontend
+    @com.fasterxml.jackson.annotation.JsonProperty("items")
+    private List<OrderItem> itemsList; // lista parseada para el frontend
 
     @NotNull(message = "El subtotal es requerido")
     @Column(nullable = false)
@@ -77,6 +85,15 @@ public class Order {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+
+    // getter y setter para itemsList (se serializa como "items" en JSON)
+    public List<OrderItem> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(List<OrderItem> itemsList) {
+        this.itemsList = itemsList;
     }
 
 }
