@@ -6,6 +6,7 @@ import com.utn.foodstore.model.User;
 import com.utn.foodstore.repository.CategoryRepository;
 import com.utn.foodstore.repository.ProductRepository;
 import com.utn.foodstore.repository.UserRepository;
+import com.utn.foodstore.util.Sha256Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -29,21 +30,21 @@ public class DataLoader implements CommandLineRunner {
         User admin = new User();
         admin.setName("Administrador");
         admin.setEmail("admin@food.com");
-        admin.setPassword("admin123");
+        admin.setPassword(Sha256Util.hash("admin123"));
         admin.setRole("admin");
         userRepository.save(admin);
 
         User cliente = new User();
         cliente.setName("Cliente Test");
         cliente.setEmail("cliente@food.com");
-        cliente.setPassword("cliente123");
+        cliente.setPassword(Sha256Util.hash("cliente123"));
         cliente.setRole("cliente");
         userRepository.save(cliente);
 
         User adrian = new User();
         adrian.setName("Adrian Fredes");
         adrian.setEmail("adrianfredes12@gmail.com");
-        adrian.setPassword("123456");
+        adrian.setPassword(Sha256Util.hash("123456"));
         adrian.setRole("admin");
         userRepository.save(adrian);
 
